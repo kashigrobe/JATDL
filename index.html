@@ -73,8 +73,6 @@
                 const tableBody = document.getElementById('taskTable').querySelector('tbody');
                 tableBody.innerHTML = ''; // Clear existing rows in table body
 
-
-
                 tasks.forEach(task => {
                     const row = tableBody.insertRow();
                     row.insertCell(0).textContent = task.id;
@@ -97,39 +95,59 @@
 
                 const newTaskTable = document.getElementById("newTask");
                 newTaskTable.removeAttribute("hidden");             
-
             }
 
-            function sendNewTaskToServer(){
+           async function sendNewTaskToServer(){
                 console.log("Are you saved")
             // After submit is clicked => Tasks gets sent to DB
-            // -Read values from field and creat object
-            // const newTaskInputTitle = document... ()
-            // const newTaskInputTitleValue = newTaskInputTitle.value
-            // const dataToSend = {
-            //     title: newTaskInputTitleValue,
-            //     desctiption: "descr",
-            //     due_date: "2023.10.31",
-            //     e
-            // }
-            // console.log(dataToSend.title)
-            // // - send created object to db
-            // createTaskAPI(dataToSend)
-            // // Tasks are reflected in Table on page  
-            // Task blocks are empty=> ready for more input
-            
+            // Read input values from form fields and create an object
+            const newTaskTitle = document.getElementById('newTaskTitle').value;
+                const newTaskDescription = document.getElementById('newTaskDescription').value;
+                const newTaskDueDate = document.getElementById('newTaskDueDate').value;
+
+            // Create a JavaScript object to hold the task data
+                const newTask = {
+                    title: newTaskTitle,
+                    description: newTaskDescription,
+                    due_date: newTaskDueDate
+                };
+           // Send the created object to the server
+           try {
+                    const response = await fetch('/api/addTask', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(newTask)
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log(data.message);
+                    } else {
+                        const data = await response.json();
+                        console.log('Error:', data.error);
+                    }
+                } catch (err) {
+                    console.error('Network or server error:', err);
+                }
+                
+                // Clear the input fields for new data entry
+                document.getElementById('newTaskTitle').value = '';
+                document.getElementById('newTaskDescription').value = '';
+                document.getElementById('newTaskDueDate').value = '';
             }
 
-            function initilizePage() {
+            // Initialize the page
+            function initializePage() {
                 const newTaskButton = document.getElementById('newTaskBtn');
                 newTaskButton.addEventListener("click", showNewTaskSection);
 
                 const newTaskSubmitButton = document.getElementById('newTaskSubmitBtn');
                 newTaskSubmitButton.addEventListener("click", sendNewTaskToServer);
-
             }
-            initilizePage()
 
+            initializePage();
         });
     </script>
 </body>

@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const db = require('./database_utils');
 
+//initialize a new Express application
 const app = express();
 const port = 3000;
 
@@ -21,7 +22,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '', 'index.html'));
 });
 
-// Register a new email (No authentication)
+// Register a new email (No authentication)Crud
 app.post('/api/register', async (req, res) => {
   const email = req.body.email;
   //Debugger

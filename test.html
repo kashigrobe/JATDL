@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDo List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</head>
+<body class="container">
+    <header>
+        <h3 class="center-align">ToDo List</h3>
+        <div class="center-align">
+            <a id="newTaskBtn" class="waves-effect waves-light btn">New Task</a>
+        </div>
+    </header>
+
+    <!-- New Task Table -->
+    <table id="newTask" hidden="hidden">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Due Date</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="text" id="newTaskTitle" /></td>
+                <td><input type="text" id="newTaskDescription" /></td>
+                <td><input type="text" id="newTaskDueDate" /></td>
+                <td><a id="newTaskSubmitBtn" class="waves-effect waves-light btn">Submit</a></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Task Table -->
+    <table id="taskTable" class="highlight centered responsive-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Email</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Due Date</th>
+                <th>Completed</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <footer><a href="/register.html">Register</a> with us to get notified via mail on due dates.</footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            function populateTable(tasks) {
+                const tableBody = document.getElementById('taskTable').querySelector('tbody');
+                tableBody.innerHTML = '';
+                tasks.forEach(task => {
+                    const row = tableBody.insertRow();
+                    Object.keys(task).forEach((key, index) => {
+                        const cell = row.insertCell(index);
+                        cell.textContent = task[key];
+                    });
+                });
+            }
+
+            async function sendNewTaskToServer() {
+                const newTask = {
+                    title: document.getElementById('newTaskTitle').value,
+                    description: document.getElementById('newTaskDescription').value,
+                    due_date: document.getElementById('newTaskDueDate').value
+                };
+
+                try {
+                    const response = await fetch('/api/addTask', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(newTask)
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log(data.message);
+                    } else {
+                        const data = await response.json();
+                        console.log('Error:', data.error);
+                    }
+                } catch (err) {
+                    console.error('Network or server error:', err);
+                }
+
+                // Clear input fields
+                ['newTaskTitle', 'newTaskDescription', 'newTaskDueDate'].forEach(id => {
+                    document.getElementById(id).value = '';
+                });
+            }
+
+            function initializePage() {
+                document.getElementById('newTaskBtn').addEventListener("click", () => {
+                    document.getElementById("newTask").removeAttribute("hidden");
+                });
+                document.getElementById('newTaskSubmitBtn').addEventListener("click", sendNewTaskToServer);
+            }
+
+            initializePage();
+
+            // Fetch tasks when the page loads
+            fetch('/api/getTasks')
+                .then(response => response.json())
+                .then(populateTable)
+                .catch(console.error);
+        });
+    </script>
+</body>
+</html>
