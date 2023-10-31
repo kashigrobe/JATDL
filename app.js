@@ -43,7 +43,7 @@ app.post('/api/register', async (req, res) => {
 app.get('/api/getTasks', async (req, res) => {
   try {
     const email = req.query.email; // Assume email is passed as a query parameter
-    const tasks = await db.getTasksByUserEmail('./db', 'todolist.db', 'default@example.com');
+    const tasks = await db.getTasksByUserEmail('./db', 'todolist.db', 'user@example.com');
     res.json(tasks);
   } catch (err) {
     res.status(500).json({ error: err.message });
