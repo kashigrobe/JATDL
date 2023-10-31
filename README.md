@@ -252,3 +252,12 @@ i am accountable for waht i ublish or submit for an assessent
 
 
 http://localhost:3000/api/addTask?email='default@example.com'?title='visit us'?description='Tasks are hard'?due_date='2023-12-05'?completed=1
+
+
+### some interesting problems
+The Materialized CCS that i used in the code has some cool features but it blocks the hidden feature.
+In the table id, i had a object that has the argument "highlight centered responsive-table" "hidden" = hidden. The web page was still showing the new taskbutton. looked under styles in the webDev and realized that my function was being over write by materialized css(DISPLAY: BLOCK) get rid of display (blocky) i got rid of class alltogther
+ newTaskTable.removeAttribute("hidden");         
+
+<!-- Materialize CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
