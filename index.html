@@ -22,6 +22,31 @@
         </div>
     </header>
 
+
+    <table id="newTask" hidden="hidden">
+        <!-- removed "class" object=highlightcentered responsive-table "hidden"hideen">==$0 because of the Materialized CCS feature that prevents my NewTask button to be the hidden -->
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Due Date</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- The tasks will be rendered here.Task rows will be dynamically inserted here -->
+            <tr>
+                <td><input type="text" id="newTaskTitle" /></td>
+                <td><input type="text" id="newTaskDescription" /></td>
+                <td><input type="text" id="newTaskDueDate" /></td>
+                <td><a id="newTaskSubmitBtn" class="waves-effect waves-light btn">Submit</a></td>
+
+            </tr>
+        </tbody>
+    </table>
+
+
+
     <table id="taskTable" class="highlight centered responsive-table">
         <thead>
             <tr>
@@ -34,7 +59,7 @@
             </tr>
         </thead>
         <tbody>
-            <!-- The tasks will be rendered here -->
+            <!-- The tasks will be rendered here.Task rows will be dynamically inserted here -->
         </tbody>
     </table>
     <footer><a href="/register.html">Register</a> with us to get notified via mail on due dates.</footer>
@@ -46,7 +71,9 @@
 
             function populateTable(tasks) {
                 const tableBody = document.getElementById('taskTable').querySelector('tbody');
-                tableBody.innerHTML = ''; // Clear existing rows
+                tableBody.innerHTML = ''; // Clear existing rows in table body
+
+
 
                 tasks.forEach(task => {
                     const row = tableBody.insertRow();
@@ -65,6 +92,43 @@
                 .then(populateTable)
                 .catch(console.error);
 
+            function showNewTaskSection() {
+                console.log("show me everything")
+
+                const newTaskTable = document.getElementById("newTask");
+                newTaskTable.removeAttribute("hidden");             
+
+            }
+
+            function sendNewTaskToServer(){
+                console.log("Are you saved")
+            // After submit is clicked => Tasks gets sent to DB
+            // -Read values from field and creat object
+            // const newTaskInputTitle = document... ()
+            // const newTaskInputTitleValue = newTaskInputTitle.value
+            // const dataToSend = {
+            //     title: newTaskInputTitleValue,
+            //     desctiption: "descr",
+            //     due_date: "2023.10.31",
+            //     e
+            // }
+            // console.log(dataToSend.title)
+            // // - send created object to db
+            // createTaskAPI(dataToSend)
+            // // Tasks are reflected in Table on page  
+            // Task blocks are empty=> ready for more input
+            
+            }
+
+            function initilizePage() {
+                const newTaskButton = document.getElementById('newTaskBtn');
+                newTaskButton.addEventListener("click", showNewTaskSection);
+
+                const newTaskSubmitButton = document.getElementById('newTaskSubmitBtn');
+                newTaskSubmitButton.addEventListener("click", sendNewTaskToServer);
+
+            }
+            initilizePage()
 
         });
     </script>
