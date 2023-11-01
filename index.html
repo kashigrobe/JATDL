@@ -45,8 +45,6 @@
         </tbody>
     </table>
 
-
-
     <table id="taskTable" class="highlight centered responsive-table">
         <thead>
             <tr>
@@ -97,7 +95,7 @@
                 newTaskTable.removeAttribute("hidden");             
             }
 
-           async function sendNewTaskToServer(){
+            async function sendNewTaskToServer(){
                 console.log("Are you saved")
             // After submit is clicked => Tasks gets sent to DB
             // Read input values from form fields and create an object
@@ -109,10 +107,12 @@
                 const newTask = {
                     title: newTaskTitle,
                     description: newTaskDescription,
-                    due_date: newTaskDueDate
+                    due_date: newTaskDueDate,
+                    email: "user@example.com",
+                    completed: false
                 };
            // Send the created object to the server
-           try {
+                try {
                     const response = await fetch('/api/addTask', {
                         method: 'POST',
                         headers: {

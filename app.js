@@ -52,14 +52,18 @@ app.get('/api/getTasks', async (req, res) => {
 });
 
 // Add a new task
+// Add a new task
 app.post('/api/addTask', async (req, res) => {
-  const { email, title, description, due_date, completed } = req.body;
+  const { title, description, due_date } = req.body;
 
-  if (!email || !title || !description || !due_date || completed === undefined) {
+  if (!title || !description || due_date === undefined) {  // <-- Updated this line
     return res.status(400).json({ error: "All fields are required" });
   }
   
   try {
+    const email = "user@example.com";  // <-- Added this line
+    const completed = false;  // <-- Added this line
+
     await db.addNewTask('./db', 'todolist.db', email, title, description, due_date, completed);
     res.status(200).json({ message: "Task added successfully." });
   } catch (err) {
