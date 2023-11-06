@@ -261,3 +261,12 @@ In the table id, i had a object that has the argument "highlight centered respon
 
 <!-- Materialize CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+
+
+### TODOs
+- manually delete all task records from DB using proper route/URL
+- manually add new tasks
+- manually update tasks using id
+- check in-between using getTasks
+

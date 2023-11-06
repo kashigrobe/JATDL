@@ -17,11 +17,31 @@ async function createTaskAPI(task) {
   }
 }
 
+// Function to delete a task using the API
+async function deleteTaskAPI(taskId) {
+  try {
+    const response = await fetch(`/api/tasks/${taskId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (err) {
+    console.error("An error occurred:", err);
+    return false;
+  }
+} // <-- This closing brace was missing
+
+
 // Fetch and display tasks from the API
 async function fetchAndDisplayTasks() {
   const email = localStorage.getItem('email') || 'default@example.com';
   try {
-    const response = await fetch(`/api/tasks?email=${email}`);
+    const response = await fetch(`/api/getTasks?email=${email}`);
     const tasks = await response.json();
     console.log("Fetched tasks:", tasks);
     displayTasks(tasks);
@@ -43,15 +63,32 @@ function displayTasks(tasks) {
     row.insertCell(3).textContent = task.description;
     row.insertCell(4).textContent = task.due_date;
     row.insertCell(5).textContent = task.completed ? 'Yes' : 'No';
+
+
+  // Create and append the delete button
+  const deleteCell = row.insertCell(6);
+  const deleteButton = document.createElement('button');
+  deleteButton.textContent = 'Delete';
+  deleteButton.addEventListener('click', async function() {
+    if (confirm(`Are you sure you want to delete task ${task.id}?`)) {
+      const result = await deleteTaskAPI(task.id);
+      if (result) {
+        console.log(`Task ${task.id} deleted successfully`);
+        fetchAndDisplayTasks();
+      }
+    }
   });
+  deleteCell.appendChild(deleteButton);
+});
 }
+
 
 document.addEventListener('DOMContentLoaded', () => {
   // Event listener for newTaskForm
   document.getElementById("newTaskForm").addEventListener("submit", async function (event) {
     event.preventDefault();
     
-    const email = localStorage.getItem('email') || '@example.com';
+    const email = localStorage.getItem('email') || 'default@example.com';
     const task = {
       email,
       title: document.getElementById("taskTitle").value,
@@ -69,28 +106,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Event listener for registration
   if (document.getElementById("register")) {
-    console.log("Register element:", document.getElementById("register")); // Debugging line
-
     document.getElementById("register").addEventListener("click", async function(event) {
       const email = document.getElementById("email").value;
-
-      console.log("Email to register:", email); // Debugging line
-
       if (email) {
         localStorage.setItem("email", email);
-        
-        const response = await fetch('/api/register', { // Debugging line starts
+        await fetch('/api/register', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ email }),
-        });
-
-        console.log('Server Response:', response); // Debugging line ends
-        
+        });      
         fetchAndDisplayTasks();
       }
     });
   }
-});
+})
