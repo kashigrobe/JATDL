@@ -11,6 +11,8 @@
 
     <!-- Materialize JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- Custom script with defer attribute to ensure it loads after the HTML content -->
+    <script src="main.js" type="text/javascript" defer></script>
 </head>
 
 <body class="container">
@@ -54,6 +56,7 @@
                 <th>Description</th>
                 <th>Due Date</th>
                 <th>Completed</th>
+                <th>delete</th>
             </tr>
         </thead>
         <tbody>
@@ -67,26 +70,29 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Function to populate the table
 
-            function populateTable(tasks) {
-                const tableBody = document.getElementById('taskTable').querySelector('tbody');
-                tableBody.innerHTML = ''; // Clear existing rows in table body
+            // function populateTable(tasks) {
+            //     const tableBody = document.getElementById('taskTable').querySelector('tbody');
+            //     tableBody.innerHTML = ''; // Clear existing rows in table body
 
-                tasks.forEach(task => {
-                    const row = tableBody.insertRow();
-                    row.insertCell(0).textContent = task.id;
-                    row.insertCell(1).textContent = task.email;
-                    row.insertCell(2).textContent = task.title;
-                    row.insertCell(3).textContent = task.description;
-                    row.insertCell(4).textContent = task.due_date;
-                    row.insertCell(5).textContent = task.completed ? 'Yes' : 'No';
-                });
-            }
+            //     tasks.forEach(task => {
+            //         const row = tableBody.insertRow();
+            //         row.insertCell(0).textContent = task.id;
+            //         row.insertCell(1).textContent = task.email;
+            //         row.insertCell(2).textContent = task.title;
+            //         row.insertCell(3).textContent = task.description;
+            //         row.insertCell(4).textContent = task.due_date;
+            //         row.insertCell(5).textContent = task.completed ? 'Yes' : 'No';
+            //     });
+            // }
 
-            // Fetch tasks when the page loads
-            fetch('/api/getTasks')
-                .then(response => response.json())
-                .then(populateTable)
-                .catch(console.error);
+            // // Fetch tasks when the page loads
+            // fetch('/api/getTasks')
+            //     .then(response => response.json())
+            //     .then(displayTasks)
+            //     .catch(console.error);
+
+            fetchAndDisplayTasks() 
+
 
             function showNewTaskSection() {
                 console.log("show me everything")
@@ -99,7 +105,7 @@
                 console.log("Are you saved")
             // After submit is clicked => Tasks gets sent to DB
             // Read input values from form fields and create an object
-            const newTaskTitle = document.getElementById('newTaskTitle').value;
+                const newTaskTitle = document.getElementById('newTaskTitle').value;
                 const newTaskDescription = document.getElementById('newTaskDescription').value;
                 const newTaskDueDate = document.getElementById('newTaskDueDate').value;
 
@@ -108,6 +114,7 @@
                     title: newTaskTitle,
                     description: newTaskDescription,
                     due_date: newTaskDueDate,
+            // The email address should be Dynamic later on. best from the user login       
                     email: "user@example.com",
                     completed: false
                 };
@@ -124,6 +131,9 @@
                     if (response.ok) {
                         const data = await response.json();
                         console.log(data.message);
+                        
+                        fetchAndDisplayTasks()
+
                     } else {
                         const data = await response.json();
                         console.log('Error:', data.error);
@@ -132,10 +142,17 @@
                     console.error('Network or server error:', err);
                 }
                 
-                // Clear the input fields for new data entry
+                 // This function clears the input fields for new data entry
+                 clearNewTaskFields()
+
+            }
+               
+            function clearNewTaskFields(){
+                 // Clear the input fields for new data entry
                 document.getElementById('newTaskTitle').value = '';
                 document.getElementById('newTaskDescription').value = '';
                 document.getElementById('newTaskDueDate').value = '';
+        
             }
 
             // Initialize the page
