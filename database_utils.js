@@ -163,30 +163,35 @@ function updateTask(db_path, db_name, taskId, title, description, due_date, comp
 
 
 function deleteTask(db_path, db_name, taskId) {
+  console.log('deleteTask', db_path, db_name, taskId) 
   return new Promise((resolve, reject) => {
     let db = new sqlite3.Database(`${db_path}/${db_name}`, sqlite3.OPEN_READWRITE, (err) => {
       if (err) {
+        console.error('Open database error:', err);
+        return reject(err);
+      }
+    });
+
+    const sql = `DELETE FROM tasks WHERE id = ?`;
+    db.run(sql, [taskId], function (err) {
+      if (err) {
+        console.error('Delete task error:', err);
+        db.close();
         return reject(err);
       }
 
-      const sql = `
-        DELETE FROM tasks
-        WHERE id = ?
-      `;
+      if (this.changes > 0) {
+        console.log(`Task with ID ${taskId} deleted successfully`);
+      } else {
+        console.log(`No task found with ID ${taskId} to delete`);
+      }
 
-      db.run(sql, [taskId], (err) => {
+      db.close((err) => {
         if (err) {
-          console.log('Could not delete task', err);
-          db.close();
+          console.error('Close database error:', err);
           return reject(err);
         }
-        
-        db.close((err) => {
-          if (err) {
-            return reject(err);
-          }
-          resolve();
-        });
+        resolve(this.changes);
       });
     });
   });
