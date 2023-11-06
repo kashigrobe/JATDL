@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 
 // Serve static files
 // app.use(express.static(path.join(__dirname, 'public')));
-// app.use(express.static('public'));
+app.use(express.static('public'));
 
 // Initialize the database
 // const database = db.initDb('./db', 'todolist.db');
@@ -51,9 +51,9 @@ app.get('/api/getTasks', async (req, res) => {
 });
 
 // Add a new task
-app.get('/api/addTask', async (req, res) => {
+app.post('/api/addTask', async (req, res) => {
   // Using query parameters instead of body
-  const { title, description, due_date } = req.query;
+  const { title, description, due_date } = req.body;
   
   if (!title || !description || !due_date) {  // <-- Updated this line
     return res.status(400).json({ error: "All fields are required" });
@@ -96,8 +96,8 @@ app.get('/api/updateTask', async (req, res) => {
 
 
 // Delete a task
-app.get('/api/deleteTask', async (req, res) => {
-  const taskId = req.query.id; // Get the id from the query string
+app.delete('/api/deleteTasks/:id', async (req, res) => {
+  const taskId = req.params.id; // Id is apart of the URL parameteter, but not apart of the query parameters(everything after the ?)
   console.log("Received request to delete task with id:", taskId);
   if (!taskId) {
     return res.status(400).json({ error: "Task ID is required" });
