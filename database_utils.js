@@ -123,7 +123,7 @@ function getTasksByUserEmail(db_path, db_name, email) {
   });
 }
 
-function updateTask(db_path, db_name, taskId, title, description, due_date, completed) {
+function updateTaskById(db_path, db_name, id, completed) {
   return new Promise((resolve, reject) => {
     let db = new sqlite3.Database(`${db_path}/${db_name}`, sqlite3.OPEN_READWRITE, (err) => {
       if (err) {
@@ -132,26 +132,28 @@ function updateTask(db_path, db_name, taskId, title, description, due_date, comp
 
       const sql = `
         UPDATE tasks
-        SET title = ?, description = ?, due_date = ?, completed = ?
+        SET completed = ?
         WHERE id = ?
       `;
 
-      db.run(sql, [title, description, due_date, completed, taskId], (err) => {
+      db.run(sql, [completed, id], function(err) {
         if (err) {
-          console.log('Could not update task', err);
+          console.log('Could not update task in tasks table', err);
+          db.close();
           return reject(err);
         }
-        
+        console.log(`Task updated with id ${id}`);
         db.close((err) => {
           if (err) {
             return reject(err);
           }
-          resolve();
+          resolve(id);
         });
       });
     });
   });
 }
+
 
 // updateTask('path_to_db', 'database_name.db', 1, 'New Title', 'New Description', '2023-10-29', 1)
 //     .then(() => {
@@ -212,6 +214,6 @@ module.exports = {
   registerEmail,
   addNewTask,
   getTasksByUserEmail,
-  updateTask,
+  updateTaskById,
   deleteTask
 };

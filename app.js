@@ -43,12 +43,17 @@ app.get('/api/getTasks', async (req, res) => {
   console.log("Received request to fetch tasks for email:", req.query.email);
   try {
     const email = req.query.email; // Assume email is passed as a query parameter
-    const tasks = await db.getTasksByUserEmail('./db', 'todolist.db', 'user@example.com');
+    if (!email) {
+      return res.status(400).json({ error: 'Email parameter is required' });
+    }
+    // Use the email from the request to fetch tasks
+    const tasks = await db.getTasksByUserEmail('./db', 'todolist.db', email);
     res.json(tasks);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
 
 // Add a new task
 app.post('/api/addTask', async (req, res) => {
@@ -72,27 +77,31 @@ app.post('/api/addTask', async (req, res) => {
 
 
 
+//  STEPS for Toogle Complete to show update
+//  Button click event is triggered in the HTML page
+//  Call the endpoint (end point update tasks)
+// Endpoint is calling  my function in database util_(update task...title etc)
 // Update a task
-app.get('/api/updateTask', async (req, res) => {
-  // Extract the task fields from the query string
+app.get('/api/updateTask/', async (req, res) => {
   const { id, title, description, due_date, completed } = req.query;
-  
-  // Check for the presence of the required fields
-  if (!id || !title || !description || !due_date || completed === undefined) {
-    return res.status(400).json({ error: "All task fields are required" });
+
+  // Check for the presence of the required field id
+  if (!id || completed === undefined) {
+    return res.status(400).json({ error: "Task ID and completion status are required" });
   }
 
-  // Convert completed to a boolean
-  const completedBool = completed === 'true';
+  // Convert completed to a boolean if it's a string
+  const completedBool = completed !== undefined ? completed === 'true' : undefined;
 
   try {
     // Call the updateTask function with the collected parameters
-    await db.updateTask('./db', 'todolist.db', id, title, description, due_date, completedBool);
+    await db.updateTaskById('./db', 'todolist.db', id, title, description, due_date, completedBool);
     res.status(200).json({ message: "Task updated successfully." });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
 
 
 // Delete a task

@@ -38,3 +38,62 @@
   //   });
   // }
   ```
+
+
+
+
+  function updateTask(db_path, db_name, taskId, title, description, due_date, completed) {
+  return new Promise((resolve, reject) => {
+    let db = new sqlite3.Database(`${db_path}/${db_name}`, sqlite3.OPEN_READWRITE, (err) => {
+      if (err) {
+        return reject(err);
+      }
+
+      let fieldsToUpdate = [];
+      let sqlValues = [];
+      
+      if (title !== undefined) {
+        fieldsToUpdate.push('title = ?');
+        sqlValues.push(title);
+      }
+      if (description !== undefined) {
+        fieldsToUpdate.push('description = ?');
+        sqlValues.push(description);
+      }
+      if (due_date !== undefined) {
+        fieldsToUpdate.push('due_date = ?');
+        sqlValues.push(due_date);
+      }
+      if (completed !== undefined) {
+        fieldsToUpdate.push('completed = ?');
+        sqlValues.push(completed);
+      }
+
+      if (fieldsToUpdate.length === 0) {
+        return reject(new Error('No fields provided for update'));
+      }
+
+      sqlValues.push(taskId);
+
+      const sql = `
+        UPDATE tasks
+        SET ${fieldsToUpdate.join(', ')}
+        WHERE id = ?
+      `;
+
+      db.run(sql, sqlValues, (err) => {
+        if (err) {
+          console.log('Could not update task', err);
+          return reject(err);
+        }
+        
+        db.close((err) => {
+          if (err) {
+            return reject(err);
+          }
+          resolve();
+        });
+      });
+    });
+  });
+}
