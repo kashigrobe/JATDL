@@ -12,7 +12,7 @@ function initializePage() {
 
 // Fetch and display tasks from the API
 async function fetchAndDisplayTasks() {
-  const email = "user@example.com"; // This should be dynamic in a real app
+  const email = "user@example.com"; // I will make this dynamic later
   try {
     const response = await fetch(`/api/getTasks?email=${email}`);
     if (!response.ok) {
@@ -50,43 +50,48 @@ function displayTasks(tasks) {
 function createToggleCompleteButton(tableRow, task) {
   const toggleCell = tableRow.insertCell(5); // Adjusting cell index to 5
   const toggleButton = document.createElement('button');
-  toggleButton.textContent = task.completed ? 'Mark Incomplete' : 'Mark Complete';
+  
+  // Adding Material Design classes
+  toggleButton.className = 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect';
+  
+  // toggleButton.classList.add('waves-effect', 'waves-light', 'btn'); // Materialize classes for styling
+  toggleButton.textContent = task.completed ? ' Incomplete' : ' Complete';
+
   toggleButton.addEventListener('click', async function () {
     const newCompletionStatus = !task.completed;
-    const result = await toggleTaskCompleteAPI(task.id, newCompletionStatus);
-    if (result) {
-      console.log(`Task ${task.id} completion status toggled successfully`);
-      fetchAndDisplayTasks();
+    // Attempt to update the task's completion status
+    try {
+      // Construct query string
+      const queryString = new URLSearchParams({ id: task.id, completed: newCompletionStatus }).toString();
+      const response = await fetch(`/api/updateTask/?${queryString}`, {
+        method: 'GET'
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+      
+      const result = await response.json();
+      if (result) {
+        console.log(`Task ${task.id} completion status toggled successfully`);
+        fetchAndDisplayTasks();
+      }
+    } catch (err) {
+      console.error("An error occurred:", err);
     }
   });
+
   toggleCell.appendChild(toggleButton);
 }
 
-async function toggleTaskCompleteAPI(taskId, newStatus) {
-  try {
-    const response = await fetch(`/api/updateTask/${taskId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ completed: newStatus })
-    });
-    if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
-    }
-    return await response.json();
-  } catch (err) {
-    console.error("An error occurred:", err);
-    return false;
-  }
-}
+
 
 function showNewTaskSection() {
   console.log("Showing new task section");
   const newTaskTable = document.getElementById("newTask");
   newTaskTable.removeAttribute("hidden");
 }
-
+// collect value from input field to create new task object, send to server
 async function sendNewTaskToServer() {
   console.log("Sending new task to server");
   const newTaskTitle = document.getElementById('newTaskTitle').value;
@@ -132,7 +137,10 @@ function clearNewTaskFields() {
 function createDeleteButton(tableRow, taskId) {
   const deleteCell = tableRow.insertCell(5); // Adjusting cell index to 5
   const deleteButton = document.createElement('button');
-  deleteButton.textContent = 'Delete';
+  // Adding Material Design classes
+  deleteButton.className = 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent';
+  deleteButton.textContent = 'Delete Task';
+
   deleteButton.addEventListener('click', async function () {
     if (confirm(`Are you sure you want to delete task ${taskId}?`)) {
       const result = await deleteTaskAPI(taskId);

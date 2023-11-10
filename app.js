@@ -83,7 +83,7 @@ app.post('/api/addTask', async (req, res) => {
 // Endpoint is calling  my function in database util_(update task...title etc)
 // Update a task
 app.get('/api/updateTask/', async (req, res) => {
-  const { id, title, description, due_date, completed } = req.query;
+  const { id, completed } = req.query;
 
   // Check for the presence of the required field id
   if (!id || completed === undefined) {
@@ -95,7 +95,7 @@ app.get('/api/updateTask/', async (req, res) => {
 
   try {
     // Call the updateTask function with the collected parameters
-    await db.updateTaskById('./db', 'todolist.db', id, title, description, due_date, completedBool);
+    await db.updateTaskById('./db', 'todolist.db', id, completedBool);
     res.status(200).json({ message: "Task updated successfully." });
   } catch (err) {
     res.status(500).json({ error: err.message });

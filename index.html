@@ -11,41 +11,44 @@
 
     <!-- Materialize JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <!-- Custom Styles -->
+    <style>
+      /* You can add your custom styles here */
+    </style>
+
     <!-- Custom script with defer attribute to ensure it loads after the HTML content -->
-    <script src="main.js" type="text/javascript"></script>
+    <script src="main.js" type="text/javascript" defer></script>
 </head>
 
 <body class="container">
 
     <header>
-        <h3 class="center-align">ToDo List </h3>
+        <h3 class="center-align">ToDo List</h3>
         <div class="center-align">
             <a id="newTaskBtn" class="waves-effect waves-light btn">New Task</a>
         </div>
     </header>
 
-
-    <table id="newTask" hidden="hidden">
-        <!-- removed "class" object=highlightcentered responsive-table "hidden"hideen">==$0 because of the Materialized CCS feature that prevents my NewTask button to be the hidden -->
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Due Date</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- The tasks will be rendered here.Task rows will be dynamically inserted here -->
-            <tr>
-                <td><input type="text" id="newTaskTitle" /></td>
-                <td><input type="text" id="newTaskDescription" /></td>
-                <td><input type="text" id="newTaskDueDate" /></td>
-                <td><a id="newTaskSubmitBtn" class="waves-effect waves-light btn">Submit</a></td>
-
-            </tr>
-        </tbody>
-    </table>
+    <div id="newTask" class="section" hidden>
+        <div class="row">
+            <div class="input-field col s12 m4">
+                <input id="newTaskTitle" type="text" class="validate">
+                <label for="newTaskTitle">Title</label>
+            </div>
+            <div class="input-field col s12 m4">
+                <input id="newTaskDescription" type="text" class="validate">
+                <label for="newTaskDescription">Description</label>
+            </div>
+            <div class="input-field col s12 m4">
+                <input id="newTaskDueDate" type="text" class="datepicker">
+                <label for="newTaskDueDate">Due Date</label>
+            </div>
+        </div>
+        <div class="center-align">
+            <a id="newTaskSubmitBtn" class="waves-effect waves-light btn">Submit Task</a>
+        </div>
+    </div>
 
     <table id="taskTable" class="highlight centered responsive-table">
         <thead>
@@ -59,13 +62,24 @@
             </tr>
         </thead>
         <tbody>
-            <!-- The tasks will be rendered here.Task rows will be dynamically inserted here -->
+            <!-- The tasks will be rendered here. Task rows will be dynamically inserted here -->
         </tbody>
     </table>
-    <footer><a href="/register.html">Register</a> with us to get notified via mail on due dates.</footer>
+
+    <footer class="page-footer">
+        <div class="center-align">
+            <a href="/register.html">Register</a> with us to get notified via mail on due dates.
+        </div>
+    </footer>
 
     <script>
-
+        // Initialize Materialize components when the DOM loads
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.datepicker');
+            M.Datepicker.init(elems, {
+                format: 'yyyy-mm-dd' // Specifies the format for the date picker
+            });
+        });
     </script>
 </body>
 

@@ -1,5 +1,5 @@
 PROMPT
-Below are (PART1) and (PART2). PART1 is froim an html page, PART2 is the scripts for PART1. the script calls into
+Below are (PART1) and (PART2). PART1 is from an html page, PART2 is the scripts for PART1. the script calls into
 a database and should retrieve task records but i'm not seeing all. please review and fix the code.
 
 PART1
