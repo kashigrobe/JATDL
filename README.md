@@ -16,7 +16,12 @@ The Personal ToDo List application is a simple tool designed to help users manag
 - in order to use reverse proxy: npx localtunnel --port 3000
 - node database.js  Run database script
 
-## How to Deploy
+## How to Deploy (render.com)
+1. go to render.com
+2. update service OR
+3. deploy from GitHub (select Web Service Tile)
+4. under yarn add node app.js as statement to launch
+
 Node for runtime situation e.g. render.com -- domain name is dasbrot.render.com
  - localhost becomes dasbrot.render.com
 

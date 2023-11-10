@@ -111,7 +111,7 @@ function getTasksByUserEmail(db_path, db_name, email) {
       }
     });
 
-    let sql = `SELECT * FROM tasks WHERE email = ?`;
+    let sql = `SELECT * FROM tasks WHERE email = ? order by completed ASC, due_date ASC`;
     db.all(sql, [email], (err, rows) => {
       db.close();
       if (err) {
