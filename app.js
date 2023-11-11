@@ -11,7 +11,7 @@ const port = 3000;
 app.use(bodyParser.json());
 
 // Serve static files
-// app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static('public'));
 
 // Initialize the database

@@ -65,7 +65,6 @@ function clearNewTaskFields() {
 
 function createButton(text, type) {
   const button = document.createElement('button');
-  button.className = `mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect ${type === 'delete' ? 'mdl-button--accent' : ''}`;
   button.textContent = text;
   return button;
 }
