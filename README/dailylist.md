@@ -2,10 +2,10 @@
 
 Rename the todolist app- It's called Grobe_practise now
 
-Why doesn't the Page refresh after task is submitted.
+
 
 - [ ] User Interface optimization
-The 'resgister' button/promt is nested in an ugly red footer banner. Change the colour 
+The 'register' button/promt is nested in an ugly red footer banner. Change the colour 
 
 - [ ] The toggle complete/Incomplete button and the delete Task button are equally ugly and changes in size 
  Let buttons be the same size 
