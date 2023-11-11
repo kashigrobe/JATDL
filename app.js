@@ -3,124 +3,67 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const db = require('./database_utils');
 
-//initialize a new Express application
 const app = express();
 const port = 3000;
 
-// Middleware
+// Middleware for parsing JSON and serving static files
 app.use(bodyParser.json());
-
-// Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static('public')); 
-
-// Initialize the database
-// const database = db.initDb('./db', 'todolist.db');
 
 // Routes
-app.get('/', (req, res) => {res.sendFile(path.join(__dirname, '', 'index.html'));});
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
-// Register a new email (No authentication)Crud
-app.post('/api/register', async (req, res) => {
-  const email = req.body.email;
-  //Debugger
-  console.log("Received email for registration:", req.body.email);
-
-  if (!email) {
-    return res.status(400).json({ error: "Email is required for registration" });
-  }
-  try {
-    // Implement the function registerEmail in database_utils
-    await db.registerEmail('./db', 'todolist.db', email);
-    res.status(200).json({ message: "Email registered successfully." });
-  } catch (err) {
+// Helper function to handle errors
+const handleAsync = (fn) => (req, res, next) => {
+  Promise.resolve(fn(req, res, next)).catch((err) => {
     res.status(500).json({ error: err.message });
-  }
-});
+  });
+};
+
+// Register a new email
+app.post('/api/register', handleAsync(async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: "Email is required" });
+  await db.registerEmail('./db', 'todolist.db', email);
+  res.status(200).json({ message: "Email registered successfully." });
+}));
 
 // Fetch tasks by email
-app.get('/api/getTasks', async (req, res) => {
-  console.log("Received request to fetch tasks for email:", req.query.email);
-  try {
-    const email = req.query.email; // Assume email is passed as a query parameter
-    if (!email) {
-      return res.status(400).json({ error: 'Email parameter is required' });
-    }
-    // Use the email from the request to fetch tasks
-    const tasks = await db.getTasksByUserEmail('./db', 'todolist.db', email);
-    res.json(tasks);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
+app.get('/api/getTasks', handleAsync(async (req, res) => {
+  const { email } = req.query;
+  if (!email) return res.status(400).json({ error: 'Email is required' });
+  const tasks = await db.getTasksByUserEmail('./db', 'todolist.db', email);
+  res.json(tasks);
+}));
 
 // Add a new task
-app.post('/api/addTask', async (req, res) => {
-  // Using query parameters instead of body
+app.post('/api/addTask', handleAsync(async (req, res) => {
   const { title, description, due_date } = req.body;
-  
-  if (!title || !description || !due_date) {  // <-- Updated this line
+  if (!title || !description || !due_date) {
     return res.status(400).json({ error: "All fields are required" });
   }
-  
-  try {
-    const email = "user@example.com";  // <-- The email is still hardcoded here
-    const completed = false;  // <-- Assuming the task is not completed when added
+  const email = "user@example.com"; // This should be dynamic in a real application
+  await db.addNewTask('./db', 'todolist.db', email, title, description, due_date, false);
+  res.status(200).json({ message: "Task added successfully." });
+}));
 
-    await db.addNewTask('./db', 'todolist.db', email, title, description, due_date, completed);
-    res.status(200).json({ message: "Task added successfully." });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-
-
-//  STEPS for Toogle Complete to show update
-//  Button click event is triggered in the HTML page
-//  Call the endpoint (end point update tasks)
-// Endpoint is calling  my function in database util_(update task...title etc)
 // Update a task
-app.get('/api/updateTask/', async (req, res) => {
+app.get('/api/updateTask', handleAsync(async (req, res) => {
   const { id, completed } = req.query;
-
-  // Check for the presence of the required field id
   if (!id || completed === undefined) {
     return res.status(400).json({ error: "Task ID and completion status are required" });
   }
-
-  // Convert completed to a boolean if it's a string
-  const completedBool = completed !== undefined ? completed === 'true' : undefined;
-
-  try {
-    // Call the updateTask function with the collected parameters
-    await db.updateTaskById('./db', 'todolist.db', id, completedBool);
-    res.status(200).json({ message: "Task updated successfully." });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-
+  await db.updateTaskById('./db', 'todolist.db', id, completed === 'true');
+  res.status(200).json({ message: "Task updated successfully." });
+}));
 
 // Delete a task
-app.delete('/api/deleteTasks/:id', async (req, res) => {
-  const taskId = req.params.id; // Id is apart of the URL parameteter, but not apart of the query parameters(everything after the ?)
-  console.log("Received request to delete task with id:", taskId);
-  if (!taskId) {
-    return res.status(400).json({ error: "Task ID is required" });
-  }
-  try {
-    await db.deleteTask('./db', 'todolist.db', taskId);
-    res.status(200).json({ message: "Task deleted successfully." });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
+app.delete('/api/deleteTasks/:id', handleAsync(async (req, res) => {
+  const { id } = req.params;
+  if (!id) return res.status(400).json({ error: "Task ID is required" });
+  await db.deleteTask('./db', 'todolist.db', id);
+  res.status(200).json({ message: "Task deleted successfully." });
+}));
 
 // Start the server
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+app.listen(port, () => console.log(`Server running on port ${port}`));
