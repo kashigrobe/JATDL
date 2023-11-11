@@ -1,108 +1,120 @@
-// Utility functions
-function initializePage() {
-  const newTaskButton = document.getElementById('newTaskBtn');
-  newTaskButton.addEventListener("click", showNewTaskSection);
+// Utility Functions
+const getElement = id => document.getElementById(id);
 
-  const newTaskSubmitButton = document.getElementById('newTaskSubmitBtn');
-  newTaskSubmitButton.addEventListener("click", sendNewTaskToServer);
-
-  // Fetch and display tasks from the API on page initialization
-  fetchAndDisplayTasks();
+// Event Handlers
+function initializeEventListeners() {
+  getElement('newTaskBtn').addEventListener("click", showNewTaskSection);
+  getElement('newTaskSubmitBtn').addEventListener("click", createAndSendNewTask);
 }
 
-// Fetch and display tasks from the API
-async function fetchAndDisplayTasks() {
-  const email = "user@example.com"; // I will make this dynamic later
+// Page Initialization
+async function initializePage() {
+  initializeEventListeners();
+  await updateTaskDisplay();
+}
+
+// Task Display and Manipulation
+async function updateTaskDisplay() {
   try {
-    const response = await fetch(`/api/getTasks?email=${email}`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const tasks = await response.json();
-    console.log("Fetched tasks:", tasks);
+    const tasks = await fetchTasks("user@example.com"); // Dynamic email in the future
     displayTasks(tasks);
   } catch (err) {
     console.error("Failed to fetch tasks:", err);
   }
 }
 
-// Display tasks
+async function fetchTasks(email) {
+  const response = await fetch(`/api/getTasks?email=${email}`);
+  if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+  return await response.json();
+}
+
 function displayTasks(tasks) {
-  const tableBody = document.getElementById('taskTable').querySelector('tbody');
-  tableBody.innerHTML = ''; // Clear existing rows
-
-  tasks.forEach(task => {
-    const row = tableBody.insertRow();
-    row.insertCell(0).textContent = task.id;
-    row.insertCell(1).textContent = task.title;
-    row.insertCell(2).textContent = task.description;
-    row.insertCell(3).textContent = task.due_date;
-    row.insertCell(4).textContent = task.completed ? 'Yes' : 'No';
-
-    // Create and append the toggle complete button
-    createToggleCompleteButton(row, task);
-
-    // Create and append the delete button
-    createDeleteButton(row, task.id);
-  });
+  const tbody = getElement('taskTable').querySelector('tbody');
+  tbody.innerHTML = ''; // Clear existing rows
+  tasks.forEach(task => addTaskRow(tbody, task));
 }
 
-function createToggleCompleteButton(tableRow, task) {
-  const toggleCell = tableRow.insertCell(5); // Adjusting cell index to 5
-  const toggleButton = document.createElement('button');
-  
-  // Adding Material Design classes
-  toggleButton.className = 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect';
-  
-  // toggleButton.classList.add('waves-effect', 'waves-light', 'btn'); // Materialize classes for styling
-  toggleButton.textContent = task.completed ? ' Incomplete' : ' Complete';
+function addTaskRow(tbody, task) {
+  const row = tbody.insertRow();
+  ['id', 'title', 'description', 'due_date', 'completed'].forEach((prop, index) => {
+    row.insertCell(index).textContent = (prop === 'completed') ? (task[prop] ? 'Yes' : 'No') : task[prop];
+  });
+  row.appendChild(createToggleButton(task));
+  row.appendChild(createDeleteButton(task.id));
+}
 
-  toggleButton.addEventListener('click', async function () {
+function createToggleButton(task) {
+  const button = createButton(task.completed ? 'Incomplete' : 'Complete', 'toggle');
+  button.addEventListener('click', () => toggleTaskCompletion(task));
+  return wrapInTableCell(button);
+}
+
+function createDeleteButton(taskId) {
+  const button = createButton('Delete Task', 'delete');
+  button.addEventListener('click', () => deleteTask(taskId));
+  return wrapInTableCell(button);
+}
+
+function clearNewTaskFields() {
+  getElement('newTaskTitle').value = '';
+  getElement('newTaskDescription').value = '';
+  getElement('newTaskDueDate').value = '';
+}
+
+
+function createButton(text, type) {
+  const button = document.createElement('button');
+  button.className = `mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect ${type === 'delete' ? 'mdl-button--accent' : ''}`;
+  button.textContent = text;
+  return button;
+}
+
+function wrapInTableCell(element) {
+  const cell = document.createElement('td');
+  cell.appendChild(element);
+  return cell;
+}
+
+async function toggleTaskCompletion(task) {
+  try {
     const newCompletionStatus = !task.completed;
-    // Attempt to update the task's completion status
-    try {
-      // Construct query string
-      const queryString = new URLSearchParams({ id: task.id, completed: newCompletionStatus }).toString();
-      const response = await fetch(`/api/updateTask/?${queryString}`, {
-        method: 'GET'
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
-      
-      const result = await response.json();
-      if (result) {
-        console.log(`Task ${task.id} completion status toggled successfully`);
-        fetchAndDisplayTasks();
-      }
-    } catch (err) {
-      console.error("An error occurred:", err);
-    }
-  });
-
-  toggleCell.appendChild(toggleButton);
+    const queryString = new URLSearchParams({ id: task.id, completed: newCompletionStatus }).toString();
+    const response = await fetch(`/api/updateTask/?${queryString}`, { method: 'GET' });
+    if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+    await updateTaskDisplay();
+  } catch (err) {
+    console.error("Error toggling task completion:", err);
+  }
 }
 
+async function deleteTask(taskId) {
+  if (!confirm(`Are you sure you want to delete task ${taskId}?`)) return;
+  try {
+    const result = await deleteTaskAPI(taskId);
+    if (result) await updateTaskDisplay();
+  } catch (err) {
+    console.error("Error deleting task:", err);
+  }
+}
 
+async function deleteTaskAPI(taskId) {
+  const response = await fetch(`/api/deleteTasks/${taskId}`, { method: 'DELETE' });
+  if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+  return await response.json();
+}
 
+// New Task Creation
 function showNewTaskSection() {
-  console.log("Showing new task section");
-  const newTaskTable = document.getElementById("newTask");
-  newTaskTable.removeAttribute("hidden");
+  getElement("newTask").removeAttribute("hidden");
 }
-// collect value from input field to create new task object, send to server
-async function sendNewTaskToServer() {
-  console.log("Sending new task to server");
-  const newTaskTitle = document.getElementById('newTaskTitle').value;
-  const newTaskDescription = document.getElementById('newTaskDescription').value;
-  const newTaskDueDate = document.getElementById('newTaskDueDate').value;
 
+async function createAndSendNewTask() {
   const newTask = {
-    title: newTaskTitle,
-    description: newTaskDescription,
-    due_date: newTaskDueDate,
-    email: "user@example.com", // This should be dynamic in a real app
+    title: getElement('newTaskTitle').value,
+    description: getElement('newTaskDescription').value,
+    due_date: getElement('newTaskDueDate').value,
+    email: "user@example.com", // To be dynamic
     completed: false
   };
 
@@ -115,14 +127,13 @@ async function sendNewTaskToServer() {
       body: JSON.stringify(newTask)
     });
 
-    if (response.ok) {
-      console.log("Task added successfully");
-        // Reload the page
-      window.location.reload();
-      // fetchAndDisplayTasks();
-    } else {
-      console.error("Failed to add task:", await response.json());
+    if (!response.ok) {
+      throw new Error("Failed to add task: " + await response.text());
     }
+
+    console.log("Task added successfully");
+    await updateTaskDisplay();
+    window.location.reload();
   } catch (err) {
     console.error("Network or server error:", err);
   }
@@ -130,45 +141,5 @@ async function sendNewTaskToServer() {
   clearNewTaskFields();
 }
 
-function clearNewTaskFields() {
-  document.getElementById('newTaskTitle').value = '';
-  document.getElementById('newTaskDescription').value = '';
-  document.getElementById('newTaskDueDate').value = '';
-}
 
-function createDeleteButton(tableRow, taskId) {
-  const deleteCell = tableRow.insertCell(5); // Adjusting cell index to 5
-  const deleteButton = document.createElement('button');
-  // Adding Material Design classes
-  deleteButton.className = 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent';
-  deleteButton.textContent = 'Delete Task';
-
-  deleteButton.addEventListener('click', async function () {
-    if (confirm(`Are you sure you want to delete task ${taskId}?`)) {
-      const result = await deleteTaskAPI(taskId);
-      if (result) {
-        console.log(`Task ${taskId} deleted successfully`);
-        fetchAndDisplayTasks();
-      }
-    }
-  });
-  deleteCell.appendChild(deleteButton);
-}
-
-async function deleteTaskAPI(taskId) {
-  try {
-    const response = await fetch(`/api/deleteTasks/${taskId}`, {
-      method: 'DELETE'
-    });
-    if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
-    }
-    return await response.json();
-  } catch (err) {
-    console.error("An error occurred:", err);
-    return false;
-  }
-}
-
-// Initialize the page when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', initializePage);
