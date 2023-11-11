@@ -96,13 +96,9 @@ my-todo-app/
 - NPM for package management.
 - Possibly a local tunnel tool for exposing local servers to the public internet.
 
-## Testing:
-- No specific testing framework implemented as per the provided package.json.
-
 ## Deployment and Running:
 - Localhost (development environment setup).
 Localtunnel for reverse proxy (as mentioned in the description of the package.json for public exposure).
-
 
 # Testing the Application
 Express API Routes
@@ -118,6 +114,7 @@ Express API Routes
 GET http://localhost:3000/api/updateTask/?id=50&completed=false
 
 
+Remove later from readme
 ### Assessment Criteria
 - Using development tool
 - Use git properly
@@ -134,7 +131,46 @@ I should have created the Api before the User Interface because i kept changing 
 I had issues with get.Post and app.Get 
 start 
 
-How to Install and Run the Project
 
-Include Credits
-tutorials or referenced a certain material that might help the user to build that particular project, include links to those here as well.
+From Sam:On Slack
+Thank you very much for your feedback on my previous question! :point_up: That helps a lot!
+On a different note: It has come to my attention that there might be a few questions about the assessment requirements. So here is a summary of all the requirements for your final hand-in:
+
+## Part 1: HTML & CSS
+- [x] Have at least 3 HTML pages
+[ ]Use a variety of CSS styles and make sure the website is responsive
+
+## Part 2: Backend
+
+[ ]Use a backend framework (Flask)
+
+[ ]Have at least 3 routes through that framework - at least one should be dynamic (that means you use the parameters from the URL to render different content. E.g.: /todos/1 should render different content than /todos/2
+
+[ ]Render content dynamically using a templating language (jinja2)
+
+## Part 3: Database Setup
+# Use a database and ORM
+Your application should have at least 2 models
+At least 1 page renders content from the database dynamically
+
+## Part 4: CRUD & Deployment
+Users can: 
+[ ]Create
+[ ]update, and 
+[ ]delete records through forms. Not just create! (The “Read” part was already covered above by rendering content from the database)
+
+## The application is deployed online and works (Make sure to test it before the hand-in!)
+
+## Part 5: Client-Side JavaScript
+- Include JavaScript on the client-side
+- Let users do anything on the page that uses JavaScript to manipulate the DOM. (This can be super simple).
+EDIT: For the sake of completeness I also wanted to mention here: Don’t forget to add a 
+
+[ ]readme file and a self reflection essay. 
+
+# Your hand-in should also include 2 URLs: 
+[ ]One for your GitHub repository and 
+[ ]one of the deployed application.
+That’s it.
+
+

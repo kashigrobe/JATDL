@@ -117,7 +117,9 @@ async function sendNewTaskToServer() {
 
     if (response.ok) {
       console.log("Task added successfully");
-      fetchAndDisplayTasks();
+        // Reload the page
+      window.location.reload();
+      // fetchAndDisplayTasks();
     } else {
       console.error("Failed to add task:", await response.json());
     }
