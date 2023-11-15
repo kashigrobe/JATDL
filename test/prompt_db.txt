@@ -1,3 +1,6 @@
+Please change the DB code below to use with an ORM. Show the differences and explain.
+
+''''
 const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
 const path = require('path');

@@ -47,7 +47,7 @@ app.post('/api/addTask', handleAsync(async (req, res) => {
   res.status(200).json({ message: "Task added successfully." });
 }));
 
-// Update a task
+// Update a task. Helper function 'handleAsync' for err in asyncr operation
 app.get('/api/updateTask', handleAsync(async (req, res) => {
   const { id, completed } = req.query;
   if (!id || completed === undefined) {
