@@ -10,6 +10,7 @@ const port = 3000;
 
 // Middleware for parsing JSON and serving static files
 app.use(bodyParser.json());
+app.use(express.static('public'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
