@@ -12,7 +12,7 @@ async function initializePage() {
   initializeEventListeners();
   await updateTaskDisplay();
 }
-
+// Tasks Management functions
 // Task Display and Manipulation
 async function updateTaskDisplay() {
   try {
@@ -35,6 +35,7 @@ function displayTasks(tasks) {
   tasks.forEach(task => addTaskRow(tbody, task));
 }
 
+// Add new task row to the Table
 function addTaskRow(tbody, task) {
   const row = tbody.insertRow();
   ['id', 'title', 'description', 'due_date', 'completed'].forEach((prop, index) => {
@@ -43,7 +44,7 @@ function addTaskRow(tbody, task) {
   row.appendChild(createToggleButton(task));
   row.appendChild(createDeleteButton(task.id));
 }
-
+//Tasks completion Toggling
 function createToggleButton(task) {
   const button = createButton(task.completed ? 'Incomplete' : 'Complete', 'toggle');
   button.addEventListener('click', () => toggleTaskCompletion(task));
@@ -86,7 +87,7 @@ async function toggleTaskCompletion(task) {
     console.error("Error toggling task completion:", err);
   }
 }
-
+// delete Tasks
 async function deleteTask(taskId) {
   if (!confirm(`Are you sure you want to delete task ${taskId}?`)) return;
   try {

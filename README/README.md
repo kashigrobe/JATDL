@@ -4,7 +4,7 @@ November 11, 2023 Created Branch
 
 # Description
 The **JATDL** ToDo List application is a tool designed to help users manage their tasks efficiently. It allows users to create, update, and delete tasks, as well as mark them as completed (CRUD). 
-The application features a user interface whichj utilizes the Google material design CSS and some interactive functionalities, implemented with JavaScript.
+The application features a user interface which utilizes the Google material design CSS and some interactive functionalities, implemented with JavaScript.
 
 # Features (CRUD)
 - Add new tasks with titles, descriptions, and due date from a calendar control (Create)
@@ -48,33 +48,30 @@ Endpoint OR dynammic route
 
 ## Project Structure (TODO - restructure current app to be more compliant with best practice)
 JATDL/
+ToDoListApp/
 │
-├── node_modules/              # Node.js packages
+├── public/                  # Frontend assets
+│   └── main.js              # Main JavaScript logic
 │
-├── public/                    # Public assets
-│   ├── css/                   # CSS stylesheets
-│   ├── js/                    # Front-end JavaScript files
-│   │   └── main.js            # Entry point for your JavaScript code
-│   └── index.html             # Main HTML page
+├── views/                   # HTML files
+│   ├── index.html           # Main page
+│   └── register.html        # User registration page
 │
-├── src/                       # Source files for the Node.js application
-│   ├── controllers/           # Route controllers (taskController.js, etc.)
-│   ├── middlewares/           # Express middlewares (auth, error handlers)
-│   ├── models/                # Database models (taskModel.js, userModel.js)
-│   ├── routes/                # Express routes (taskRoutes.js, userRoutes.js)
-│   ├── utils/                 # Utility scripts and helper functions
-│   └── app.js                 # Express app setup and middlewares
+├── server/                  # Backend server
+│   ├── app.js               # Express.js server setup
+│   └── database_utils.js    # Database utility functions
 │
-├── db/                        # Directory for database files
-│   └── todolist.db            # SQLite database file
+├── db/
+│   └── todolist.db          # SQLite database file
 │
-├── test/                      # Automated tests
+├── node_modules/            # Node.js modules (ignored in version control)
 │
-├── .env                       # Environment variables
-├── .gitignore                 # Specifies intentionally untracked files to ignore
-├── package.json               # Node.js dependencies and scripts
-├── package-lock.json          # Locked versions of each package that were installed
-└── README.md                  # README for the project
+├── package.json             # Project dependencies and metadata
+├── package-lock.json        # Dependency lock file
+├── .gitignore               # Specifies intentionally untracked files to ignore
+├── .env                     # Environment variables (if needed)
+└── README.md                # Project documentation
+
 
 # Tech stack used in application?
 ### Front-end:
@@ -111,7 +108,10 @@ Express API Routes
 
 ## Testing Individual Routes
 - Add Task (/api/addTask):
-
+The API endpoint uses the POST method, whci requires for the URL to be created differently from GET. The function in the testing.js file is accounting for that and adds 5 example records as one. Note: in order to run this code against the local server the URL in the function must be changed e.g. 
+- https://dasbrot.onrender.com/api/addTask ... to
+- https://localhost:3000/api/addTask (mind the port use on locaalhost)
+ 
 ### Update Task Completion Status (/api/updateTask):
 - For updating a task's completion status, send a GET request to http://localhost:3000/api/updateTask/ with query parameters id and completed. For example, to mark the task with for example ID 50 as incomplete, the request would be:
 GET http://localhost:3000/api/updateTask/?id=50&completed=false
@@ -122,6 +122,10 @@ GET http://localhost:3000/api/updateTask/?id=50&completed=false
 ### Challenges along the way
 - high complexity due to need to use lots of differnt tecch components e.g. database, SQL, javascript, Node, Express, API ...
 - it's hard to mainain clean project structure
+- Server Management, it took a  few weeks to mange the server state, like realizing when the server was still running and needed to be restarted to reflect code changes. 
+- Initially, kept mixing up ES6 'import' syntax with CommonJS 'require' syntax
+even though my Node environment wasn't set up to hadνδλε ΕS6 imports.Mixing Module Systems: Initially, there was a mix of ES6 import and CommonJS require syntax in the same file. Understanding when and how to use these different module systems in Node.js can be confusing
+
 
 # SAM Notes from here on out
 ---
@@ -137,7 +141,9 @@ GET http://localhost:3000/api/updateTask/?id=50&completed=false
 
 ## Part 3: Database Setup
 # Use a database and ORM
-- IS ORM use required given the small size of the project. We only have USER and TASK as Tables in DB
+- IS ORM use required given the small size of the project. I only have USER and TASK as Tables in DB
+  I have everything you asked for except the ORM part. seems complex given I have only 2 tables AND also because I created an API endpoint for all DB functions (so have it encapsulated already).
+  
 - [ ] Your application should have at least 2 models
 - [x] At least 1 page renders content from the database dynamically
 
@@ -164,3 +170,10 @@ EDIT: For the sake of completeness I also wanted to mention here: Don’t forget
 That’s it.
 
 
+# EXTRAS TO DELETE
+## Handin form link
+
+https://app.code.berlin/handins/clocuqfzt0001mv0g3qmktbqi/submit
+
+## Google drive Instructions
+https://www.notion.so/codeuniversitywiki/Hand-in-Document-Uploads-January-2023-6aa06bcbbf7545e4a84eb8e88d95d09f

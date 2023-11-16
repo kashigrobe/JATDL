@@ -1,7 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const db = require('./database_utils');
+// const db = require('./database_utils');
+const db_orm = require('./database_utils_orm');
+
 
 const app = express();
 const port = 3000;
@@ -24,7 +26,7 @@ const handleAsync = (fn) => (req, res, next) => {
 app.post('/api/register', handleAsync(async (req, res) => {
   const { email } = req.body;
   if (!email) return res.status(400).json({ error: "Email is required" });
-  await db.registerEmail('./db', 'todolist.db', email);
+  await db_orm.registerEmail(email);
   res.status(200).json({ message: "Email registered successfully." });
 }));
 
@@ -32,7 +34,10 @@ app.post('/api/register', handleAsync(async (req, res) => {
 app.get('/api/getTasks', handleAsync(async (req, res) => {
   const { email } = req.query;
   if (!email) return res.status(400).json({ error: 'Email is required' });
-  const tasks = await db.getTasksByUserEmail('./db', 'todolist.db', email);
+
+  // const tasks = await db.getTasksByUserEmail('./db', 'todolist.db', email);
+  const tasks = await db_orm.getTasksByUserEmail(email);
+  
   res.json(tasks);
 }));
 
@@ -43,17 +48,17 @@ app.post('/api/addTask', handleAsync(async (req, res) => {
     return res.status(400).json({ error: "All fields are required" });
   }
   const email = "user@example.com"; // This should be dynamic in a real application
-  await db.addNewTask('./db', 'todolist.db', email, title, description, due_date, false);
+  await db_orm.addNewTask(email, title, description, due_date, false);
   res.status(200).json({ message: "Task added successfully." });
 }));
 
-// Update a task
+// Update a task. Helper function 'handleAsync' for err in asyncr operation
 app.get('/api/updateTask', handleAsync(async (req, res) => {
   const { id, completed } = req.query;
   if (!id || completed === undefined) {
     return res.status(400).json({ error: "Task ID and completion status are required" });
   }
-  await db.updateTaskById('./db', 'todolist.db', id, completed === 'true');
+  await db_orm.updateTaskById(id, completed === 'true');
   res.status(200).json({ message: "Task updated successfully." });
 }));
 
@@ -61,7 +66,7 @@ app.get('/api/updateTask', handleAsync(async (req, res) => {
 app.delete('/api/deleteTasks/:id', handleAsync(async (req, res) => {
   const { id } = req.params;
   if (!id) return res.status(400).json({ error: "Task ID is required" });
-  await db.deleteTask('./db', 'todolist.db', id);
+  await db_orm.deleteTask(id);
   res.status(200).json({ message: "Task deleted successfully." });
 }));
 
