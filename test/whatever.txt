@@ -1,0 +1,161 @@
+When my app calls into database_util_orm.js (see file below) I receive the following error message.
+
+❯ node app.js
+Server running on port 3000
+Executing (default): SELECT name FROM sqlite_master WHERE type='table' AND name='tasks';
+Executing (default): PRAGMA INDEX_LIST(`tasks`)
+Executing (default): SELECT name FROM sqlite_master WHERE type='table' AND name='users';
+Executing (default): CREATE TABLE IF NOT EXISTS `users` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `email` VARCHAR(255), `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL);
+Executing (default): PRAGMA INDEX_LIST(`users`)
+Executing (default): SELECT `id`, `email`, `title`, `description`, `due_date`, `completed`, `createdAt`, `updatedAt` FROM `tasks` AS `task` WHERE `task`.`email` = 'user@example.com';
+Error in fetching tasks: Error
+    at Database.<anonymous> (/Users/kashigrobe/DEV/JATDL/node_modules/sequelize/lib/dialects/sqlite/query.js:185:27)
+    at /Users/kashigrobe/DEV/JATDL/node_modules/sequelize/lib/dialects/sqlite/query.js:183:50
+    at new Promise (<anonymous>)
+    at Query.run (/Users/kashigrobe/DEV/JATDL/node_modules/sequelize/lib/dialects/sqlite/query.js:183:12)
+    at /Users/kashigrobe/DEV/JATDL/node_modules/sequelize/lib/sequelize.js:315:28
+    at async SQLiteQueryInterface.select (/Users/kashigrobe/DEV/JATDL/node_modules/sequelize/lib/dialects/abstract/query-interface.js:407:12)
+    at async task.findAll (/Users/kashigrobe/DEV/JATDL/node_modules/sequelize/lib/model.js:1140:21)
+    at async Object.getTasksByUserEmail (/Users/kashigrobe/DEV/JATDL/database_utils_orm.js:42:19)
+    at async /Users/kashigrobe/DEV/JATDL/app.js:39:17 {
+  name: 'SequelizeDatabaseError',
+  parent: Error: SQLITE_ERROR: no such column: createdAt
+  --> in Database#all("SELECT `id`, `email`, `title`, `description`, `due_date`, `completed`, `createdAt`, `updatedAt` FROM `tasks` AS `task` WHERE `task`.`email` = 'user@example.com';", [], [Function: afterExecute])
+      at executeSql (/Users/kashigrobe/DEV/JATDL/node_modules/sequelize/lib/dialects/sqlite/query.js:211:21)
+      at Database.<anonymous> (/Users/kashigrobe/DEV/JATDL/node_modules/sequelize/lib/dialects/sqlite/query.js:238:14) {
+    errno: 1,
+    code: 'SQLITE_ERROR',
+    __augmented: true,
+    sql: "SELECT `id`, `email`, `title`, `description`, `due_date`, `completed`, `createdAt`, `updatedAt` FROM `tasks` AS `task` WHERE `task`.`email` = 'user@example.com';"
+  },
+  original: Error: SQLITE_ERROR: no such column: createdAt
+  --> in Database#all("SELECT `id`, `email`, `title`, `description`, `due_date`, `completed`, `createdAt`, `updatedAt` FROM `tasks` AS `task` WHERE `task`.`email` = 'user@example.com';", [], [Function: afterExecute])
+      at executeSql (/Users/kashigrobe/DEV/JATDL/node_modules/sequelize/lib/dialects/sqlite/query.js:211:21)
+      at Database.<anonymous> (/Users/kashigrobe/DEV/JATDL/node_modules/sequelize/lib/dialects/sqlite/query.js:238:14) {
+    errno: 1,
+    code: 'SQLITE_ERROR',
+    __augmented: true,
+    sql: "SELECT `id`, `email`, `title`, `description`, `due_date`, `completed`, `createdAt`, `updatedAt` FROM `tasks` AS `task` WHERE `task`.`email` = 'user@example.com';"
+  },
+  sql: "SELECT `id`, `email`, `title`, `description`, `due_date`, `completed`, `createdAt`, `updatedAt` FROM `tasks` AS `task` WHERE `task`.`email` = 'user@example.com';",
+  parameters: {}
+}
+Executing (default): SELECT `id`, `email`, `title`, `description`, `due_date`, `completed`, `createdAt`, `updatedAt` FROM `tasks` AS `task` WHERE `task`.`email` = 'user@example.com';
+Error in fetching tasks: Error
+    at Database.<anonymous> (/Users/kashigrobe/DEV/JATDL/node_modules/sequelize/lib/dialects/sqlite/query.js:185:27)
+    at /Users/kashigrobe/DEV/JATDL/node_modules/sequelize/lib/dialects/sqlite/query.js:183:50
+    at new Promise (<anonymous>)
+    at Query.run (/Users/kashigrobe/DEV/JATDL/node_modules/sequelize/lib/dialects/sqlite/query.js:183:12)
+    at /Users/kashigrobe/DEV/JATDL/node_modules/sequelize/lib/sequelize.js:315:28
+    at async SQLiteQueryInterface.select (/Users/kashigrobe/DEV/JATDL/node_modules/sequelize/lib/dialects/abstract/query-interface.js:407:12)
+    at async task.findAll (/Users/kashigrobe/DEV/JATDL/node_modules/sequelize/lib/model.js:1140:21)
+    at async Object.getTasksByUserEmail (/Users/kashigrobe/DEV/JATDL/database_utils_orm.js:42:19)
+    at async /Users/kashigrobe/DEV/JATDL/app.js:39:17 {
+  name: 'SequelizeDatabaseError',
+  parent: Error: SQLITE_ERROR: no such column: createdAt
+  --> in Database#all("SELECT `id`, `email`, `title`, `description`, `due_date`, `completed`, `createdAt`, `updatedAt` FROM `tasks` AS `task` WHERE `task`.`email` = 'user@example.com';", [], [Function: afterExecute])
+      at executeSql (/Users/kashigrobe/DEV/JATDL/node_modules/sequelize/lib/dialects/sqlite/query.js:211:21)
+      at Database.<anonymous> (/Users/kashigrobe/DEV/JATDL/node_modules/sequelize/lib/dialects/sqlite/query.js:238:14) {
+    errno: 1,
+    code: 'SQLITE_ERROR',
+    __augmented: true,
+    sql: "SELECT `id`, `email`, `title`, `description`, `due_date`, `completed`, `createdAt`, `updatedAt` FROM `tasks` AS `task` WHERE `task`.`email` = 'user@example.com';"
+  },
+  original: Error: SQLITE_ERROR: no such column: createdAt
+  --> in Database#all("SELECT `id`, `email`, `title`, `description`, `due_date`, `completed`, `createdAt`, `updatedAt` FROM `tasks` AS `task` WHERE `task`.`email` = 'user@example.com';", [], [Function: afterExecute])
+      at executeSql (/Users/kashigrobe/DEV/JATDL/node_modules/sequelize/lib/dialects/sqlite/query.js:211:21)
+      at Database.<anonymous> (/Users/kashigrobe/DEV/JATDL/node_modules/sequelize/lib/dialects/sqlite/query.js:238:14) {
+    errno: 1,
+    code: 'SQLITE_ERROR',
+    __augmented: true,
+    sql: "SELECT `id`, `email`, `title`, `description`, `due_date`, `completed`, `createdAt`, `updatedAt` FROM `tasks` AS `task` WHERE `task`.`email` = 'user@example.com';"
+  },
+  sql: "SELECT `id`, `email`, `title`, `description`, `due_date`, `completed`, `createdAt`, `updatedAt` FROM `tasks` AS `task` WHERE `task`.`email` = 'user@example.com';",
+  parameters: {}
+}
+
+'''Database_utils_orm.js
+const { Sequelize, DataTypes, Model } = require('sequelize');
+
+// Initialize Sequelize
+const sequelize = new Sequelize({
+  dialect: 'sqlite',
+  storage: './db/todolist.db' // Change this to your database path and name
+});
+
+// Define models
+class Task extends Model {}
+Task.init({
+  email: DataTypes.STRING,
+  title: DataTypes.STRING,
+  description: DataTypes.STRING,
+  due_date: DataTypes.STRING,
+  completed: DataTypes.BOOLEAN
+}, { sequelize, modelName: 'task' });
+
+class User extends Model {}
+User.init({
+  email: DataTypes.STRING
+}, { sequelize, modelName: 'user' });
+
+// Sync models with database
+sequelize.sync();
+
+// Add new task
+async function addNewTask(email, title, description, due_date, completed) {
+  try {
+    const task = await Task.create({ email, title, description, due_date, completed });
+    console.log(`Task inserted with id ${task.id}`);
+    return task.id;
+  } catch (error) {
+    console.error('Could not insert task into tasks table', error);
+    throw error;
+  }
+}
+
+// Get tasks by user email
+async function getTasksByUserEmail(email) {
+  try {
+    const tasks = await Task.findAll({ where: { email } });
+    console.log(tasks);
+    return tasks;
+  } catch (error) {
+    console.error('Error in fetching tasks:', error);
+    throw error;
+  }
+}
+
+// Update task by ID
+async function updateTaskById(id, completed) {
+  try {
+    const result = await Task.update({ completed }, { where: { id } });
+    console.log(`Task updated with id ${id}`);
+    return result;
+  } catch (error) {
+    console.error('Could not update task in tasks table', error);
+    throw error;
+  }
+}
+
+// Delete task
+async function deleteTask(taskId) {
+  try {
+    const result = await Task.destroy({ where: { id: taskId } });
+    if (result > 0) {
+      console.log(`Task with ID ${taskId} deleted successfully`);
+    } else {
+      console.log(`No task found with ID ${taskId} to delete`);
+    }
+    return result;
+  } catch (error) {
+    console.error('Delete task error:', error);
+    throw error;
+  }
+}
+
+module.exports = {
+  addNewTask,
+  getTasksByUserEmail,
+  updateTaskById,
+  deleteTask
+};

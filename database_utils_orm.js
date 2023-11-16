@@ -3,10 +3,14 @@ const { Sequelize, DataTypes, Model } = require('sequelize');
 // Initialize Sequelize
 const sequelize = new Sequelize({
   dialect: 'sqlite',
-  storage: 'path_to_your_database/db_name.db' // Change this to your database path and name
+  storage: './db/todolist.db' // Change this to your database path and name
 });
 
 // Define models
+// 
+// timestamps: false is required to keep the difference between Database_utils.js and the ORM approach to a minimum.
+// usually 2 additional timestamp fields are required per table to deal with sync issues between client and server.
+// 
 class Task extends Model {}
 Task.init({
   email: DataTypes.STRING,
@@ -14,7 +18,10 @@ Task.init({
   description: DataTypes.STRING,
   due_date: DataTypes.STRING,
   completed: DataTypes.BOOLEAN
-}, { sequelize, modelName: 'task' });
+//  this woould be required if timestamps: false was not set 
+// createdAt: DataTypes.DATE, // Add this line
+// updatedAt: DataTypes.DATE  // And this line
+}, { sequelize, modelName: 'task', timestamps: false });
 
 class User extends Model {}
 User.init({

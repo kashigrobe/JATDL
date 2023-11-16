@@ -9,8 +9,10 @@ async function addMultipleTasks() {
       
     for (const task of tasks) {
       try {
-        const response = await fetch('https://dasBrot.onrender.com/api/addTask', {
-          method: 'POST',
+        // const response = await fetch('https://dasBrot.onrender.com/api/addTask', {
+        const response = await fetch('http://localhost:3000/api/addTask', {
+
+        method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
