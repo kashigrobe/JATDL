@@ -5,11 +5,14 @@
 - **Storage Limitation:** Limited disk space impacts SQLite3 database storage. 
 - **Subscription Note:** Paid subscription required for additional space.
 - **Functionality Impact:** No adverse impact on app's functionality.
-- **Behavior on VM Removal:** When render.com removes our VM, the app is redeployed from Git, reverting the database to an older version.
 - **Deployment Choice:** Opted for this setup despite limitations due to free version constraints.
 
+- **Behavior on VM Removal:** When render.com removes my Virtual Machine, the app is redeployed from Git, reverting the database to an older version.
+  Our application is currently hosted on the free version of render.com. This version has limited disk space for storing files, including our SQLite3 database. To access more space, a paid subscription is required. The application functions properly as long as render.com maintains free apps. However, each time render.com removes our virtual machine, the code is redeployed from our Git repository. This process reinstalls an older version of our database, affecting the app's functionality. Despite this limitation, we have chosen this approach due to the constraints of the free version.
+
+
 ## Application Description
-JATDL ToDo List app helps users efficiently manage tasks. It features CRUD operations, a Google Material Design-based UI, and interactive JavaScript elements.
+The **JATDL** ToDo List app helps users efficiently manage tasks. It features CRUD operations, a Google Material Design-based UI, and interactive JavaScript elements.
 
 ## Features
 - **Create:** Add tasks with details and due dates.
@@ -63,11 +66,19 @@ JATDL ToDo List app helps users efficiently manage tasks. It features CRUD opera
 ### Deployment and Running
 - Hosted at [https://dasbrot.onrender.com](https://dasbrot.onrender.com).
 
-## Testing the Application
+## For internal testing of the Application
 - **Express API Routes:** Tested for correct HTTP response and database interaction.
+
 - **Individual Route Testing:**
   - Add Task: POST /api/addTask
+  - https://dasbrot.onrender.com/api/addTask ... to
+  - https://localhost:3000/api/addTask 
   - Update Task: GET /api/updateTask/?id=[ID]&completed=[true/false]
+  
+  - **Login and Register:** (coming soon)
+  -  http://localhost:3000/login.html
+  -  https://dasbrot.onrender.com/login.html
+
 
 ## Repository
 - GitHub: [https://github.com/kashigrobe/JATDL.git](https://github.com/kashigrobe/JATDL.git)
@@ -81,12 +92,12 @@ JATDL ToDo List app helps users efficiently manage tasks. It features CRUD opera
 
 ## SAM's Checklist
 ### HTML & CSS
-- [x] Minimum 3 HTML pages.
-- [x] Varied CSS styles ensuring responsiveness.
+- [x] Minimum 3 HTML pages (index.html, login.html, register.html, password-recovery.html)
+- [x] Varied CSS styles ensuring style and responsiveness (google & self-made)
 
 ### Backend
 - [x] Backend framework (express) used.
-- [x] Minimum 3 routes, including dynamic ones.
+- [x] Minimum 3 routes, including dynamic ones (api/getTasks, api/addTask, api/updateTask, api/deleteTasks)
 - [x] Content dynamically rendered using a templating language.
 
 ### Database Setup
@@ -98,7 +109,7 @@ JATDL ToDo List app helps users efficiently manage tasks. It features CRUD opera
 - [x] Application deployed and functional online.
 
 ### Client-Side JavaScript
-- [x] JavaScript included for DOM manipulation.
+- [x] JavaScript included for DOM manipulation (main.js + index.html)
 
 ## Submission Details
 - **GitHub Repository:** [https://github.com/kashigrobe/JATDL.git](https://github.com/kashigrobe/JATDL.git)

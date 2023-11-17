@@ -1,21 +1,19 @@
-/* CSS for styles.css */
 
-/* Set the background color of the page */
 body {
-  background-color: rgb(176, 228, 230); /* Light blue background */
-  color: white; /* Set the text color to white */
+  background-color: rgb(176, 228, 230); 
+  color: white; 
 }
 
-/* Style buttons */
+
 button {
-  background-color: orange; /* Orange background for buttons */
-  color: white; /* White text for buttons */
-  border: none; /* No border for buttons */
-  padding: 10px 20px; /* Padding around the button text */
-  cursor: pointer; /* Pointer cursor on hover */
+  background-color: orange; 
+  color: white; 
+  border: none; 
+  padding: 10px 20px; 
+  cursor: pointer; 
 }
 
-/* Style for the page footer */
+
 .page-footer, .page-footer a {
   background-color: lightgreen !important;
 }
