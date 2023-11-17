@@ -6,7 +6,7 @@ async function addMultipleTasks() {
         { title: 'Alien Language Lexicon', description: 'Translate and create a basic lexicon for the newly discovered alien language.', due_date: '2023-12-04', email: 'user@example.com' },
         { title: 'Virtual Reality Safari', description: 'Design a virtual reality safari experience, complete with 5 different ecosystems.', due_date: '2023-12-05', email: 'user@example.com' }
     ];
-      
+       // Iterate over each task in the array
     for (const task of tasks) {
       try {
         // const response = await fetch('https://dasBrot.onrender.com/api/addTask', {

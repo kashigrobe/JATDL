@@ -7,12 +7,13 @@ function initDb(db_path, db_name) {
   let db;
   const dbFilePath = path.join(db_path, db_name);
 
+  // check if the database already exists
   if (fs.existsSync(dbFilePath)) {
     console.log('Database already exists. Skipping initialization.');
     db = new sqlite3.Database(dbFilePath);
     return db;
   }
-
+// create a new Database file
   db = new sqlite3.Database(dbFilePath, (err) => {
     if (err) {
       console.log('Could not connect to database', err);
@@ -22,6 +23,7 @@ function initDb(db_path, db_name) {
     }
   });
 
+  // Define and run SQL queries to create necessary tables
   db.serialize(() => {
     db.run(`
       CREATE TABLE IF NOT EXISTS tasks (
@@ -65,7 +67,7 @@ function registerEmail(db, email) {
     }
   });
 }
-
+// Add a new task to the tasks table
 function addNewTask(db_path, db_name, email, title, description, due_date, completed) {
   return new Promise((resolve, reject) => {
     let db = new sqlite3.Database(`${db_path}/${db_name}`, sqlite3.OPEN_READWRITE, (err) => {
