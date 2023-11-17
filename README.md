@@ -8,7 +8,7 @@
 - **Deployment Choice:** Opted for this setup despite limitations due to free version constraints.
 
 - **Behavior on VM Removal:** When render.com removes my Virtual Machine, the app is redeployed from Git, reverting the database to an older version.
-  Our application is currently hosted on the free version of render.com. This version has limited disk space for storing files, including our SQLite3 database. To access more space, a paid subscription is required. The application functions properly as long as render.com maintains free apps. However, each time render.com removes our virtual machine, the code is redeployed from our Git repository. This process reinstalls an older version of our database, affecting the app's functionality. Despite this limitation, we have chosen this approach due to the constraints of the free version.
+  The application is currently hosted on the free version of render.com. This version has limited disk space for storing files, including our SQLite3 database. To access more space, a paid subscription is required. The application functions properly as long as render.com maintains free apps. However, each time render.com removes my virtual machine, the code is redeployed from our Git repository. This process reinstalls an older version of our database, affecting the app's functionality. Despite this limitation, i have chosen this approach due to the constraints of the free version.
 
 
 ## Application Description

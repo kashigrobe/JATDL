@@ -1,4 +1,5 @@
-When my app calls into database_util_orm.js (see file below) I receive the following error message.
+When my app calls into database_util_orm.js (see file below) 
+I receive the following error message.
 
 ❯ node app.js
 Server running on port 3000
