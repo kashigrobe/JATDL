@@ -1,5 +1,6 @@
-The code provided in TESTING.JS does not provide an email. However, the email is required by the endpoint, as you can see in line 13.
-please correct the testing.js code.
+The code provided in TESTING.JS does not provide an email. 
+However, the email is required by the endpoint, as you can see in line 13.
+please explain why using the the testing.js code.
 
 
 
